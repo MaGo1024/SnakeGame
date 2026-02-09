@@ -9,6 +9,7 @@ screen.setup(width=600, height=600)
 screen.bgcolor("black")
 screen.title("My Snake Game")
 screen.tracer(0)
+wall = 280
 
 starting_position = [(0,0), (-20, 0), (-40, 0)]
 segments = []
@@ -39,11 +40,22 @@ while game_is_on:
     # detect  collision with food
     if snake.head.distance(food) < 15:
         food.new_food()
+        snake.extend()
         score.increase_score()
 
     # detect collision with the wall
-    if snake.head.xcor() > 280 or snake.head.xcor() < -280 or snake.head.ycor() > 280 or snake.head.ycor() < -280:
+    if snake.head.xcor() > wall or snake.head.xcor() < -wall or snake.head.ycor() > wall or snake.head.ycor() < -wall:
         game_is_on = False
         score.game_over()
+
+    # detect collision with tail
+    for segment in snake.segments:
+        # if head collides with any segment in the tail:
+        if segment == snake.head:
+            pass
+        elif snake.head.distance(segment) < 10:
+            # trigger game_over
+            game_is_on = False
+            score.game_over()
 
 screen.exitonclick()
